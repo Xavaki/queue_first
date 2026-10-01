@@ -1,0 +1,6 @@
+{"contents":{"twoColumnBrowseResultsRenderer":{"tabs":[{"tabRenderer":{"content":{"sectionListRenderer":{"contents":[{"itemSectionRenderer":{"contents":[{"playlistVideoListRenderer":{"contents":[
+{"playlistVideoRenderer":{"videoId":"AAAAAAAAAA1","setVideoId":"SET1","title":{"runs":[{"text":"First video"}]},"isPlayable":true}},
+{"playlistVideoRenderer":{"videoId":"BBBBBBBBBB2","setVideoId":"SET2","title":{"simpleText":"Second video"},"isPlayable":true}},
+{"playlistVideoRenderer":{"videoId":"CCCCCCCCCC3","setVideoId":"SET3","title":{"runs":[{"text":"[Private video]"}]},"isPlayable":false}},
+{"continuationItemRenderer":{"continuationEndpoint":{"continuationCommand":{"token":"TOKEN-PAGE-2"}}}}
+]}}]}}]}}}}]}}}

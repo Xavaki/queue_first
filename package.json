@@ -1,0 +1,23 @@
+{
+  "name": "queue-first",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Firefox extension for intentional YouTube use: watch your Watch Later queue oldest-first.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p test",
+    "test": "vitest run",
+    "lint:ext": "web-ext lint --source-dir dist",
+    "start": "web-ext run --source-dir dist --start-url https://www.youtube.com/",
+    "package": "npm run build && web-ext build --source-dir dist --artifacts-dir artifacts --overwrite-dest"
+  },
+  "devDependencies": {
+    "@types/firefox-webext-browser": "^143.0.1",
+    "@types/node": "^26.6.3",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  }
+}

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Queue First</title>
+  <link rel="stylesheet" href="ui.css">
+</head>
+<body class="popup">
+  <main aria-live="polite">
+    <h1>Queue First</h1>
+    <p id="status" class="status">Loading…</p>
+    <dl>
+      <dt>In queue</dt><dd id="queue">–</dd>
+      <dt>Oldest</dt><dd id="head">–</dd>
+      <dt>Homepage skips left</dt><dd id="skips">–</dd>
+      <dt>Resets</dt><dd id="reset">–</dd>
+    </dl>
+    <div class="actions">
+      <button id="open" class="primary" type="button">Open Watch Later</button>
+      <button id="settings" type="button">Settings</button>
+    </div>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>

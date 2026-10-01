@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Queue First settings</title>
+  <link rel="stylesheet" href="ui.css">
+</head>
+<body class="options">
+  <main>
+    <h1>Queue First settings</h1>
+    <p class="muted">Queue First works on www.youtube.com in desktop Firefox. YouTube Music, the mobile site, embedded players on other sites, other browsers and devices, and private windows are not covered. It is a voluntary safeguard.</p>
+
+    <section aria-labelledby="h-sync">
+      <h2 id="h-sync">Account and sync</h2>
+      <div id="account">Loading…</div>
+    </section>
+
+    <section aria-labelledby="h-skips">
+      <h2 id="h-skips">Daily skips</h2>
+      <p id="skips"></p>
+      <label for="tz">Reset timezone (IANA)</label>
+      <div class="row">
+        <input id="tz" list="tz-list" autocomplete="off" spellcheck="false">
+        <datalist id="tz-list"></datalist>
+        <button id="tz-save" type="button">Save timezone</button>
+      </div>
+      <p id="tz-msg" class="muted" role="status"></p>
+    </section>
+
+    <section aria-labelledby="h-music">
+      <h2 id="h-music">Music overrides</h2>
+      <p class="muted">A user override: treat a specific video as music even if YouTube's category says otherwise. It applies to the current YouTube account only. Channel-wide exemptions are not available.</p>
+      <ul id="overrides"></ul>
+      <label for="ov">Video URL or ID</label>
+      <div class="row">
+        <input id="ov" autocomplete="off" spellcheck="false">
+        <button id="ov-add" type="button">Add override</button>
+      </div>
+      <p id="ov-msg" class="muted" role="status"></p>
+    </section>
+
+    <section aria-labelledby="h-diag">
+      <h2 id="h-diag">Diagnostics</h2>
+      <p class="muted">Diagnostics exclude account identifiers, video titles, cookies, and tokens.</p>
+      <div class="row">
+        <button id="diag" type="button">Show diagnostics</button>
+        <button id="cache" type="button">Clear category cache</button>
+      </div>
+      <pre id="diag-out" hidden></pre>
+    </section>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>

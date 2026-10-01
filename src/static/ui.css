@@ -1,0 +1,28 @@
+:root {
+  --bg: #ffffff; --fg: #0f0f0f; --muted: #606060; --border: #d9d9d9; --accent: #065fd4; --accent-fg: #fff; --soft: #f2f2f2; --warn: #b3261e;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #1f1f1f; --fg: #f1f1f1; --muted: #aaaaaa; --border: #3f3f3f; --accent: #3ea6ff; --accent-fg: #0f0f0f; --soft: #303030; --warn: #f28b82; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 14px/1.45 system-ui, sans-serif; }
+body.popup { width: 320px; padding: 16px; }
+body.options main { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { font-size: 1.3em; margin: 0 0 8px; }
+h2 { font-size: 1.1em; margin: 28px 0 8px; }
+.muted { color: var(--muted); }
+.warn { color: var(--warn); }
+.status { font-weight: 600; }
+dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 12px 0; }
+dt { color: var(--muted); }
+dd { margin: 0; overflow-wrap: anywhere; }
+.actions, .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+button { font: inherit; padding: 6px 14px; border-radius: 18px; border: 1px solid var(--border); background: var(--soft); color: var(--fg); cursor: pointer; }
+button.primary { background: var(--accent); color: var(--accent-fg); border-color: transparent; }
+button.link { background: none; border: none; color: var(--accent); padding: 2px 4px; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input { font: inherit; padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--fg); min-width: 260px; }
+label { display: block; margin-top: 8px; }
+ul { padding-left: 18px; }
+pre { background: var(--soft); padding: 12px; border-radius: 8px; overflow: auto; max-height: 400px; }
