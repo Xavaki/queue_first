@@ -14,7 +14,7 @@ ytd-video-preview,
 }
 
 /* Watch Later page: the native oldest-first order is kept by disabling the
-   sort control; every row except the oldest nonmusic video is shaded. */
+   sort control; every row except the oldest video is hidden. */
 
 /* Order controls (keep in sync with WL_ORDER_CONTROLS in selectors.ts). */
 html[data-queue-first-wl] chip-view-model:has(button[role="combobox"]),
@@ -29,20 +29,12 @@ html[data-queue-first-wl] ytd-playlist-video-renderer #reorder {
   visibility: hidden !important;
 }
 
-html[data-queue-first-wl] ytd-playlist-video-renderer:not([data-queue-first-row]),
-html[data-queue-first-wl] ytd-playlist-video-renderer[data-queue-first-row="locked"],
-html[data-queue-first-wl] ytd-playlist-video-renderer[data-queue-first-row="unavailable"] {
-  opacity: .32;
-  filter: grayscale(1);
-  cursor: not-allowed;
-}
-
-/* Links inside rows set their own pointer cursor; override it everywhere
-   except the row's ⋯ menu, which stays usable for removing videos. */
-html[data-queue-first-wl] ytd-playlist-video-renderer:not([data-queue-first-row]) :not(#menu, #menu *),
-html[data-queue-first-wl] ytd-playlist-video-renderer[data-queue-first-row="locked"] :not(#menu, #menu *),
-html[data-queue-first-wl] ytd-playlist-video-renderer[data-queue-first-row="unavailable"] :not(#menu, #menu *) {
-  cursor: not-allowed !important;
+/* Every row except the oldest video is removed from view, including rows not
+   yet classified, so no title or thumbnail flashes. One "hidden" card below
+   the list stands in for all of them (watchLaterPage.ts). Rows stay in the
+   DOM: their links identify the videos. */
+html[data-queue-first-wl] ytd-playlist-video-renderer:not([data-queue-first-row="head"]) {
+  display: none !important;
 }
 
 html[data-queue-first-wl] ytd-playlist-video-renderer[data-queue-first-row="head"] {

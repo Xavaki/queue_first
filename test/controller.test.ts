@@ -89,19 +89,20 @@ const launch = (tab: number, videoId: string) =>
   handle({ type: 'launch', videoId, requestId: rid() }, at(tab, WL)) as Promise<LaunchResult>;
 
 describe('queueing and launching', () => {
-  it('queues nonmusic without playing it; plays only after Play oldest', async () => {
+  it('queues nonmusic without playing it; the oldest plays directly', async () => {
     await setup();
     expect(await enqueue(1, A)).toMatchObject({ status: 'added', position: 1 });
     expect(watchLater).toEqual([A]);
-    expect(await evaluate(1, A)).toMatchObject({ allowed: false, reason: 'head_needs_launch' });
+    expect(await evaluate(1, A)).toMatchObject({ allowed: true, kind: 'ordinary' });
     await enqueue(1, B);
     expect(await enqueue(1, A)).toMatchObject({ status: 'already_queued', position: 1 });
     expect(await launch(1, B)).toMatchObject({ status: 'refused' });
     expect(await launch(1, A)).toMatchObject({ status: 'granted' });
     expect(await evaluate(1, A)).toMatchObject({ allowed: true, kind: 'ordinary' });
-    // Same-tab reload is still allowed; another tab is not.
+    // The oldest plays in any tab; queued-behind videos do not.
     expect(await evaluate(1, A)).toMatchObject({ allowed: true });
-    expect(await evaluate(2, A)).toMatchObject({ allowed: false });
+    expect(await evaluate(2, A)).toMatchObject({ allowed: true });
+    expect(await evaluate(2, B)).toMatchObject({ allowed: false, reason: 'queued_not_head' });
   });
 
   it('advances only when you remove the oldest from Watch Later yourself', async () => {
@@ -115,7 +116,7 @@ describe('queueing and launching', () => {
     // Removed with YouTube's own controls; the next Watch Later read advances.
     watchLater = watchLater.filter((v) => v !== A);
     await handle({ type: 'wlState', refresh: true }, at(2, WL));
-    expect(await evaluate(2, B)).toMatchObject({ allowed: false, reason: 'head_needs_launch' });
+    expect(await evaluate(2, B)).toMatchObject({ allowed: true, kind: 'ordinary' });
   });
 
   it('confirmed music plays without queue insertion', async () => {
@@ -181,7 +182,7 @@ describe('homepage skips', () => {
     expect(await skip(1, D)).toEqual({ status: 'refused', reason: 'no_skips' });
     expect(calls['wl.add']).toBe(addsBefore);
     expect(watchLater).toEqual([A]);
-    expect(await evaluate(2, A)).toMatchObject({ reason: 'head_needs_launch', head: { videoId: A } });
+    expect(await evaluate(2, A)).toMatchObject({ allowed: true, head: { videoId: A } });
   });
 
   it('queued videos and non-homepage senders cannot use a skip', async () => {

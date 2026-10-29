@@ -133,7 +133,6 @@ export type BlockReason =
   | 'not_initialized'
   | 'not_queued'
   | 'queued_not_head'
-  | 'head_needs_launch'
   | 'head_unconfirmed'
   | 'unavailable';
 

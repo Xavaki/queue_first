@@ -65,15 +65,21 @@ export function decidePlayback(input: PlaybackInput): PlaybackDecision {
     return { ...base, allowed: true, kind: 'ordinary' };
   }
 
+  // The oldest confirmed video always plays, from anywhere, with no launch
+  // step. Checked before classification so it never waits on it.
+  const isHead = !!view && !!entry && view.head?.entryId === entry.entryId;
+  if (input.loggedIn && input.accountKey && isHead && entry!.sync === 'confirmed') {
+    return { ...base, allowed: true, kind: 'ordinary' };
+  }
+
   if (category === 'PENDING') return { ...base, reason: 'classifying' };
   if (!input.loggedIn) return { ...base, reason: 'signed_out' };
   if (!input.accountKey || !account) return { ...base, reason: 'account_unknown' };
   if (!view) return { ...base, reason: 'not_initialized' };
   if (!entry) return { ...base, reason: 'not_queued' };
   if (entry.status === 'unavailable') return { ...base, reason: 'unavailable' };
-  if (view.head?.entryId !== entry.entryId) return { ...base, reason: 'queued_not_head' };
-  if (entry.sync !== 'confirmed') return { ...base, reason: 'head_unconfirmed' };
-  return { ...base, reason: 'head_needs_launch' };
+  if (!isHead) return { ...base, reason: 'queued_not_head' };
+  return { ...base, reason: 'head_unconfirmed' };
 }
 
 /** Prefer a resolved classification over a ledger placeholder. */
@@ -103,7 +109,6 @@ export const BLOCK_MESSAGES: Record<NonNullable<PlaybackDecision['reason']>, str
   not_initialized: 'Queue First is not set up for this account. Open Watch Later to set it up.',
   not_queued: 'This video is not in your queue. Videos play from Watch Later, oldest first.',
   queued_not_head: 'This video is queued behind older videos. Watch the oldest one first.',
-  head_needs_launch: 'This is your oldest video. Start it from Watch Later.',
   head_unconfirmed: 'This video has not been confirmed in Watch Later yet. Retry the save from Watch Later.',
   unavailable: 'YouTube reports this video as unavailable.',
 };

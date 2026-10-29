@@ -114,15 +114,17 @@ describe('playback policy', () => {
   const base = (a: AccountState | null, videoId: string, grants: Grant[] = [], category: 'MUSIC' | 'NON_MUSIC' | 'UNKNOWN' | 'PENDING' = 'NON_MUSIC') =>
     decidePlayback({ videoId, tabId: 1, loggedIn: true, accountKey: a?.accountKey ?? 'k1', account: a, category, grants });
 
-  it('blocks the head until launched from Watch Later', () => {
+  it('plays the head directly; later videos stay blocked', () => {
     const a = add(add(ready(), A), B);
-    expect(base(a, A)).toMatchObject({ allowed: false, reason: 'head_needs_launch', position: 1 });
+    expect(base(a, A)).toMatchObject({ allowed: true, kind: 'ordinary', position: 1 });
+    expect(base(a, A, [], 'PENDING')).toMatchObject({ allowed: true, kind: 'ordinary' });
     expect(base(a, B)).toMatchObject({ allowed: false, reason: 'queued_not_head', position: 2 });
     expect(base(a, A, [grant({})])).toMatchObject({ allowed: true, kind: 'ordinary' });
   });
 
   it('grants are bound to tab, video and account', () => {
-    const a = add(ready(), A);
+    // C is the head, so A needs a grant.
+    const a = add(add(ready(), C), A);
     expect(base(a, A, [grant({ tabId: 2 })]).allowed).toBe(false);
     expect(base(a, B, [grant({})]).allowed).toBe(false);
     expect(base(a, A, [grant({ accountKey: 'other' })]).allowed).toBe(false);
@@ -142,7 +144,7 @@ describe('playback policy', () => {
   });
 
   it('skip grants allow only that video in that tab', () => {
-    const a = add(ready(), A);
+    const a = add(add(ready(), B), A);
     const g = grant({ kind: 'skip', videoId: C, accountKey: null });
     expect(base(a, C, [g])).toMatchObject({ allowed: true, kind: 'skip' });
     expect(base(a, A, [g]).allowed).toBe(false);

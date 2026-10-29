@@ -121,7 +121,7 @@ function injectLockCss(): void {
 
 const SKIP_CSS = `
 :host { position: fixed; right: 2.4rem; bottom: 2.4rem; z-index: 2147483000; }
-button { font-size: 1.4rem; padding: .8rem 1.6rem; box-shadow: var(--qf-shadow); }
+button { font-size: 1.4rem; padding: .8rem 1.6rem; box-shadow: var(--qf-shadow); border: 2px solid var(--qf-accent); }
 `;
 
 export class BrowseLock {

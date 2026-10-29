@@ -94,6 +94,9 @@ export const WL_ROW = 'ytd-playlist-video-renderer';
 /** Link inside a row that identifies its video. */
 export const WL_ROW_LINK = 'a#video-title, a#thumbnail, a[href*="/watch?v="]';
 
+/** The list's row container; the single "hidden" card is mounted after it. */
+export const WL_LIST_CONTENTS = 'ytd-playlist-video-list-renderer #contents';
+
 /** Metadata column inside a row, where the head badge is mounted. */
 export const WL_ROW_META = '#meta';
 

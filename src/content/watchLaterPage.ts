@@ -1,8 +1,9 @@
 // Native Watch Later page. No separate UI: Watch Later lists oldest first,
 // the sort control is disabled (CSS) so that order stays, and every row except
-// the oldest nonmusic video is shaded. Clicking the oldest row plays it.
+// the oldest video is hidden (CSS), with one card below the list saying how many
+// are hidden. Clicking the oldest row plays it.
 
-import { WL_ORDER_CONTROLS, WL_ROW, WL_ROW_LINK, WL_ROW_META } from '../adapters/youtube/selectors';
+import { WL_LIST_CONTENTS, WL_ORDER_CONTROLS, WL_ROW, WL_ROW_LINK, WL_ROW_META } from '../adapters/youtube/selectors';
 import { videoIdFromHref, watchUrl } from '../shared/ids';
 import type { LaunchResult, RowStatus, WlState } from '../shared/messages';
 import { requestId, send } from './api';
@@ -31,6 +32,12 @@ const BADGE_CSS = `
 button { font-size: 1.2rem; padding: .2rem .8rem; }
 `;
 
+const HIDDEN_CARD_CSS = `
+:host { display: block; margin: 8px 0 0; }
+.card { padding: 1rem 1.6rem; border: 1px dashed var(--qf-border); border-radius: 1.2rem; color: var(--qf-muted);
+  font-size: 1.3rem; cursor: default; user-select: none; }
+`;
+
 export function rowVideoId(row: Element): string | null {
   const a = row.querySelector<HTMLAnchorElement>(WL_ROW_LINK);
   return a ? videoIdFromHref(a.href) : null;
@@ -45,6 +52,8 @@ export class WatchLaterPage {
   /** Inline status next to the head's "Up next" pill (replaces toasts). */
   private launchNote = '';
   private frame = 0;
+  /** The single card standing in for every hidden row. */
+  private hiddenCard: { host: HTMLElement } | null = null;
 
   isActive(): boolean {
     return this.observer !== null;
@@ -71,6 +80,7 @@ export class WatchLaterPage {
     }
     for (const row of document.querySelectorAll(`[${ROW_ATTR}]`)) row.removeAttribute(ROW_ATTR);
     for (const b of document.querySelectorAll(`[${BADGE_ATTR}]`)) b.remove();
+    this.hiddenCard?.host.remove();
   }
 
   /** Row status for interception; null while the page state is unknown. */
@@ -113,10 +123,12 @@ export class WatchLaterPage {
   private apply(): void {
     this.lockOrderControls();
     const s = this.state;
+    let anyHidden = false;
     for (const row of document.querySelectorAll(WL_ROW)) {
       const id = rowVideoId(row);
       const status: RowStatus = id && s?.init === 'ready' ? (s.rows[id] ?? 'locked') : 'locked';
       if (row.getAttribute(ROW_ATTR) !== status) row.setAttribute(ROW_ATTR, status);
+      if (status !== 'head') anyHidden = true;
       const label =
         status === 'head' ? 'Oldest video: click to play' :
         status === 'music' ? 'Music: plays freely' :
@@ -125,6 +137,26 @@ export class WatchLaterPage {
       if (row.getAttribute('title') !== label) row.setAttribute('title', label);
       this.renderBadge(row, id, status);
     }
+    // The queue knows every video; the DOM only holds the pages loaded so far.
+    if (s?.init === 'ready' && Object.values(s.rows).some((r) => r !== 'head')) anyHidden = true;
+    this.renderHiddenCard(anyHidden);
+  }
+
+  /** One static card below the list for all hidden rows (no hover, no action). */
+  private renderHiddenCard(show: boolean): void {
+    const contents = document.querySelector(WL_LIST_CONTENTS);
+    if (!contents || !show) {
+      this.hiddenCard?.host.remove();
+      return;
+    }
+    if (!this.hiddenCard) {
+      const { host, root } = createHost(HIDDEN_CARD_CSS);
+      root.append(h('div', { class: 'card', title: 'Watch the oldest video first' }, 'Other videos hidden by Queue First'));
+      this.hiddenCard = { host };
+    }
+    const card = this.hiddenCard;
+    // Only move it when needed: the page observer would see every move.
+    if (contents.nextElementSibling !== card.host) contents.after(card.host);
   }
 
   /** The sort menu and drag handles become inert: no clicks, focus, or keys. */

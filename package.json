@@ -1,6 +1,6 @@
 {
   "name": "queue-first",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Firefox extension for intentional YouTube use: watch your Watch Later queue oldest-first.",
   "type": "module",
