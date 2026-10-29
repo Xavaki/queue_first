@@ -12,6 +12,9 @@ body.options main { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
 h1 { font-size: 1.3em; margin: 0 0 8px; }
 h2 { font-size: 1.1em; margin: 28px 0 8px; }
 .muted { color: var(--muted); }
+.access { border: 1px solid var(--warn); border-radius: 8px; padding: 4px 12px 12px; margin: 8px 0 12px; }
+.access p { margin: 8px 0 0; }
+[hidden] { display: none !important; }
 .warn { color: var(--warn); }
 .status { font-weight: 600; }
 dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 12px 0; }

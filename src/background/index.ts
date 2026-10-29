@@ -1,5 +1,6 @@
 // Background entry point: validates every message and routes it to the controller.
 
+import { hasYouTubeAccess } from '../shared/access';
 import { isMessage } from '../shared/messages';
 import { handle, onTabRemoved } from './controller';
 
@@ -42,6 +43,23 @@ async function currentUrl(tabId: number | null, senderUrl: string | null): Promi
   }
   return senderUrl;
 }
+
+// Missing YouTube access stops everything silently: flag it on the toolbar
+// button, and open settings (which offers the fix) right after install.
+async function showAccessState(): Promise<boolean> {
+  const ok = await hasYouTubeAccess();
+  await browser.action.setBadgeText({ text: ok ? '' : '!' });
+  await browser.action.setBadgeBackgroundColor({ color: '#b3261e' });
+  await browser.action.setTitle({ title: ok ? 'Queue First' : 'Queue First: YouTube access is off. Click to fix.' });
+  return ok;
+}
+browser.permissions.onAdded.addListener(() => void showAccessState());
+browser.permissions.onRemoved.addListener(() => void showAccessState());
+browser.runtime.onInstalled.addListener(async ({ reason }) => {
+  const ok = await showAccessState();
+  if (!ok && reason === 'install') await browser.runtime.openOptionsPage();
+});
+void showAccessState();
 
 browser.tabs.onRemoved.addListener((tabId) => {
   void onTabRemoved(tabId);

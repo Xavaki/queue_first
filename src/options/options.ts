@@ -1,3 +1,4 @@
+import { wireAccessPrompt } from '../shared/access';
 import { videoIdFromHref, isVideoId } from '../shared/ids';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -103,3 +104,5 @@ $('cache').addEventListener('click', async () => {
 });
 
 void load();
+
+void wireAccessPrompt($('access'), $<HTMLButtonElement>('access-grant'), () => void load());

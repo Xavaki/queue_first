@@ -8,6 +8,12 @@
 <body class="popup">
   <main aria-live="polite">
     <h1>Queue First</h1>
+    <section id="access" class="access" hidden>
+      <p class="warn status">Queue First can't reach YouTube.</p>
+      <p>Firefox's access to www.youtube.com is switched off for this extension, so nothing is locked or queued.</p>
+      <div class="actions"><button id="access-grant" class="primary" type="button">Allow access to YouTube</button></div>
+      <p class="muted">Then reload any open YouTube tabs.</p>
+    </section>
     <p id="status" class="status">Loading…</p>
     <dl>
       <dt>In queue</dt><dd id="queue">–</dd>

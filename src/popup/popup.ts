@@ -1,3 +1,4 @@
+import { wireAccessPrompt } from '../shared/access';
 import type { PopupState } from '../shared/messages';
 
 const $ = (id: string) => document.getElementById(id)!;
@@ -26,6 +27,8 @@ $('settings').addEventListener('click', async () => {
   await browser.runtime.openOptionsPage();
   window.close();
 });
+
+void wireAccessPrompt($('access'), $('access-grant') as HTMLButtonElement, () => void load());
 
 load().catch((e) => {
   $('status').textContent = `Error: ${(e as Error).message}`;
