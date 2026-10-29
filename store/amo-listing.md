@@ -26,6 +26,11 @@ Privacy: everything stays in your browser. Queue First talks only to youtube.com
 
 Limits: works on www.youtube.com in desktop Firefox. YouTube Music, the mobile site, embedded players on other sites and private windows are not covered. It is a voluntary safeguard, not parental control.
 
+## Screenshots (store/screenshots, 1280×800)
+
+1. `1-homepage-locked.png`: "Browse freely: video cards are greyed out until you save them to Watch Later. Two daily skips for exceptions."
+2. `2-watch-later-oldest-only.png`: "Watch Later shows only the oldest video. Watch it, remove it, and the next one unlocks."
+
 ## Categories
 
 - Social & Communication (or: Other)
