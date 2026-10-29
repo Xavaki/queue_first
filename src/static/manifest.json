@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Queue First",
   "version": "0.2.0",
-  "description": "Intentional YouTube: clicks go to Watch Later, and you watch your queue oldest first. Music plays freely.",
+  "description": "Intentional YouTube: to watch a video, save it to Watch Later. Your queue plays oldest first. Music plays freely. Two skips a day.",
   "browser_specific_settings": {
     "gecko": {
       "id": "queue-first@extensions.local",

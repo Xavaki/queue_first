@@ -1,6 +1,6 @@
 # Queue First
 
-A Firefox extension for intentional YouTube use. Browsing stays open, but outside Watch Later every video card is dimmed and locked. Clicking one plays it only if it's music. To queue anything else, use the card's ⋮ menu (shown in blue) → **Save to Watch Later**. Music sections aren't locked: the homepage **Music** chip and YouTube's Music page work normally, and each video is still checked when it opens. On the Watch Later page, which lists oldest first, the sort button is disabled and every row except the first nonmusic video is dimmed and locked. Click the oldest row to play it. When you're done, remove it from Watch Later yourself with YouTube's own controls. The next video then unlocks. The extension never removes videos and doesn't track how much you watched. Music plays freely. Two daily skips let you play a homepage video directly without queueing it. The floating **skips left** button on the homepage turns on skip mode, which restores the cards' color, and your next click uses a skip.
+A Firefox extension for intentional YouTube use. Browsing stays open, but outside Watch Later every video card is dimmed and locked. Clicking one plays it only if it's music. To queue anything else, use the card's ⋮ menu (shown in blue) → **Save to Watch Later**. Music sections aren't locked: the homepage **Music** chip and YouTube's Music page work normally, and each video is still checked when it opens. The only way to watch a video is to save it to Watch Later. On the Watch Later page, which lists oldest first, the sort button is disabled and only the oldest video is shown; one card stands in for the rest. The oldest video plays from anywhere, with no extra step. When you're done, remove it from Watch Later yourself with YouTube's own controls. The next video then unlocks. The extension never removes videos and doesn't track how much you watched. Music plays freely. Two daily skips let you play a homepage video directly without queueing it. The floating **skips left** button on the homepage turns on skip mode, which restores the cards' color, and your next click uses a skip.
 
 The original product contract is [`queue-first-spec.md`](queue-first-spec.md). The UX has since moved away from it: there are no separate panels, and Watch Later's own order is the queue.
 
@@ -50,7 +50,7 @@ There is no access to other sites, no analytics, no remote code, no backend, and
 src/
   policy/          pure logic: engine (authorization), ledger (ordering), skips
   background/      controller (sole writer; serialized transactions), store, classifier, Watch Later adapter
-  content/         guard (media enforcement), intercept (card locking, clicks, homepage skip mode), watchLaterPage (native page shading), UI
+  content/         guard (media enforcement), intercept (card locking, clicks, homepage skip mode), watchLaterPage (native page: oldest row only), UI
   adapters/youtube/
     parsers.ts     all YouTube response parsing (versioned by PARSER_VERSION)
     selectors.ts   all YouTube DOM selectors
@@ -80,7 +80,7 @@ The queue is your Watch Later playlist in its native order, which is oldest firs
 
 - The first visit to Watch Later imports the list automatically. This needs one complete read, including every continuation page.
 - The controls that change the order are disabled on this page. The sort menu and the per-row drag handles are made `inert`, so they can't be clicked, focused or used from the keyboard, and interaction with them is blocked before YouTube sees it.
-- Each row is marked with its status: **Up next** (the first nonmusic video: outlined, click to play), **locked** (dimmed), or **music** (normal).
+- Only the oldest video's row is shown (outlined, marked **Up next**, click to play). Every other row is hidden behind a single "Other videos hidden by Queue First" card.
 - New saves join the end, just as YouTube appends them.
 - The queue advances only when you remove the oldest video from Watch Later yourself. Watching it, even to the end, changes nothing.
 - Only a complete read can change the order or confirm that a video was removed. A partial read never moves the head.
