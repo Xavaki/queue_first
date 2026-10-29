@@ -22,7 +22,7 @@ import { videoIdFromHref, type Route } from '../shared/ids';
 import type { ClassifyResult, ContentState, RowStatus, SkipResult } from '../shared/messages';
 import { requestId, send } from './api';
 import { createHost, h, isOwnUi } from './ui';
-import { rowVideoId } from './watchLaterPage';
+import { PAGE_ATTR, rowVideoId } from './watchLaterPage';
 
 const LOCK_ATTR = 'data-queue-first-browse';
 const SKIP_MODE_ATTR = 'data-queue-first-skip-mode';
@@ -72,7 +72,9 @@ function navigate(a: HTMLAnchorElement, videoId: string): void {
 // part of the card that contains neither, rather than on the card itself.
 
 export function lockCss(): string {
-  const cards = `:is(${VIDEO_CARD})`;
+  // Watch Later rows have their own shading (content.css) once that page is
+  // set up; until then the lock covers them like any other card.
+  const cards = `:is(${VIDEO_CARD}):not(html[${PAGE_ATTR}] ${WL_ROW})`;
   const outer = `${cards}:not(${cards} *)`;
   const menu = `:is(${CARD_MENU})`;
   const channel = `:is(${CHANNEL_LINK})`;
@@ -152,7 +154,9 @@ export class BrowseLock {
   sync(): void {
     if (!this.route) return;
     const music = !this.pending && inMusicSection(this.route);
-    document.documentElement.toggleAttribute(LOCK_ATTR, this.route.kind !== 'watch_later' && !music);
+    // Stays on for Watch Later too: YouTube keeps showing the page being left
+    // for a moment after the URL changes, and its cards must stay shaded.
+    document.documentElement.toggleAttribute(LOCK_ATTR, !music);
     if (music === this.music) return;
     this.music = music;
     if (music) this.setSkipMode(false);

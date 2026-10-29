@@ -8,7 +8,7 @@ import type { LaunchResult, RowStatus, WlState } from '../shared/messages';
 import { requestId, send } from './api';
 import { createHost, h } from './ui';
 
-const PAGE_ATTR = 'data-queue-first-wl';
+export const PAGE_ATTR = 'data-queue-first-wl';
 const ROW_ATTR = 'data-queue-first-row';
 const BADGE_ATTR = 'data-queue-first-badge';
 const LOCKED_CONTROL_ATTR = 'data-queue-first-locked';
